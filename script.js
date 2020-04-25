@@ -1,4 +1,5 @@
 let display = document.querySelector('#display');
+let upper_display = document.querySelector('#upper_display');
 let one = document.querySelector('#one');
 let two = document.querySelector('#two');
 let three = document.querySelector('#three');
@@ -30,6 +31,10 @@ let invalid = false;
 let total = 0;
 
 let equalsClicked = false;
+let operatorClicked = false;
+
+let upperDisplayValue = '';
+
 
 
 function add (firstNumber, secondNumber) {
@@ -70,9 +75,16 @@ function displayResult(resultValue) {
 	display.textContent = resultValue;
 };
 
+function upperDisplay(displayValue) {
+	upper_display.textContent = displayValue;
+}
+
 function numberPressed() {
 	displayResult(displayValue);
 	equalsClicked = false;
+	operatorClicked = false;
+
+	upperDisplay('');
 }
 
 function operationCalc() {
@@ -88,13 +100,35 @@ function operationCalc() {
 	}
 
 	equalsClicked = false;
+	operatorClicked = true;
+	upperDisplay('');
 }
 
 function calculate() {
 	firstNumber = values[0];
 	values[numberOfValues] = parseFloat(display.textContent);
 
+	if (operators.length == 0) {
+		return;
+	}
+
 	for (let i = 0; i < operators.length; i++) {
+		if (operators[i] == '/' && values[i+1] == 0) {
+			displayResult('undefined');
+
+			clearArray(values);
+			clearArray(operators);
+
+			numberOfValues = 0;
+			numberOfOperators = 0;
+			displayValue = '';
+			return;
+		}
+		if (i == 0) {
+			upperDisplayValue += firstNumber + ' ';
+		}
+		upperDisplayValue += operators[i] + ' ' + values[i+1] + ' ';
+
 		total = operate(operators[i], firstNumber, values[i+1]);
 		firstNumber = total;
 	}
@@ -102,6 +136,10 @@ function calculate() {
 	total = parseFloat(total.toFixed(10));
 
 	displayResult(total);
+
+	upperDisplayValue += '=' + ' ' + total;
+	upperDisplay(upperDisplayValue);
+	upperDisplayValue = '';
 
 	clearArray(values);
 	clearArray(operators);
@@ -170,8 +208,10 @@ zero.addEventListener('click', e => {
 });
 
 decimal.addEventListener('click', e => {
-	displayValue += '.';
-	numberPressed();
+	if (!displayValue.includes(".")) {
+		displayValue += '.';
+		numberPressed();
+	}
 });
 
 addition.addEventListener('click', e => {
@@ -206,6 +246,7 @@ clear.addEventListener('click', e => {
 	numberOfOperators = 0;
 
 	displayResult('');
+	upperDisplay('');
 });
 
 backspace.addEventListener('click', e=> {
@@ -317,6 +358,7 @@ this.addEventListener('keydown', event => {
 
     if (event.keyCode == 13) {
     	calculate();
+    	displayResult(total);
     }
 
     if (event.keyCode == 190) {
@@ -324,6 +366,16 @@ this.addEventListener('keydown', event => {
 		displayResult(displayValue);
 
 		equalsClicked = false;
+    }
+
+    if (event.keyCode == 8) {
+    	if (equalsClicked) {
+			displayValue = display.textContent;
+		}
+
+		displayValue = displayValue.toString();
+		displayValue = displayValue.slice(0, -1);
+		displayResult(displayValue);
     }
 });
 

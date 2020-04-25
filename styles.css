@@ -10,17 +10,47 @@
 	box-shadow: 10px 10px #d6d6d6;
 }
 
-#display {
-	height: 80px;
+.display {
+	height: 110px;
 	border: 1px black solid;
 	border-radius: 5px;
 	width: 375px;
 	margin: auto;
 	background-color: white;
 	margin-bottom: 60px;
-	font-size: 50px;
+	font-size: 30px;
 	text-align: right;
 	background-color: #f2f2f2;
+	overflow:hidden;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+	position: relative;
+}
+
+#upper_display {
+	order: 1;
+	flex: 1;
+	font-size: 20px;
+
+	margin: auto 15px;
+	position: relative;
+	bottom: 100;
+    right: 110;
+	text-align: right;
+	height: 200px;
+}
+
+#display {
+	order: 2;
+	flex: 2;
+	font-size: 40px;
+
+	margin: auto 10px;
+	position: relative;
+	bottom: 100;
+    right: 110;
+	text-align: right;
 }
 
 .buttons {
@@ -38,4 +68,11 @@
 	background-color: #f2f2f2;
 }
 
+#ac {
+	width: 175px;
+}
+
+#equals {
+	width: 175px;
+}
 
